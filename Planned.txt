@@ -1,0 +1,24 @@
+1. nonSpell01
+2. Fox Maiden's Charm
+3. Noble Phantasm: "Eightfold Blessings of Amaterasu"
+4. nonSpell02
+5. Jusou: Kounisshou A
+6. nonSpell03
+7. Fox Wedding "EX"
+8. nonSpell04
+9. Morph A
+10. Noble Phantasm Combination: "Feasting Parasol of Amaterasu"
+
+Planned Features:
+-Ripple/glow effects during "Eightfold Blessings of Amaterasu"
+-Aura effect
+-Sounds
+
+Known Bugs:
+
+Major, game-breaking bugs:
+-Lag spike when rendering mirror for the first time in "Eightfold Blessings of Amaterasu".
+-Redesign the last part of "Eightfold Blessings of Amaterasu".
+
+Minor, nitpicky bugs:
+-Initial amulets in "Eightfold Blessings of Amaterasu" have a weird angle before adjusting properly.

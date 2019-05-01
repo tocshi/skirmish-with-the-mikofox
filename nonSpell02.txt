@@ -1,0 +1,243 @@
+#include".\shot\AllStarShot_Const.txt"
+#include".\Functions.txt"
+#include".\selibrary.txt"
+#include".\Cutin.txt"
+
+
+let Tamamo = ID_INVALID;
+let mirror = ID_INVALID;
+let mirrorSprite = ObjPrim_Create(OBJ_SPRITE_2D);
+
+let TamamoX = GetStgFrameWidth()/2;
+let TamamoY = GetStgFrameTop();
+let mirrorX = GetStgFrameWidth()/2;
+let mirrorY = GetStgFrameTop()-100;
+
+//mirror path points; I am lazy okay
+let magnitude = 40;
+
+let mpX0 = 0;
+let mpY0 = 0;
+let mpX1 = 0;
+let mpY1 = 0;
+let mpX2 = 0;
+let mpY2 = 0;
+let mpX3 = 0;
+let mpY3 = 0;
+let mpX4 = 0;
+let mpY4 = 0;
+let mpX5 = 0;
+let mpY5 = 0;
+let mpX6 = 0;
+let mpY6 = 0;
+let mpX7 = 0;
+let mpY7 = 0;
+let mpX8 = 0;
+let mpY8 = 0;
+let mpX9 = 0;
+let mpY9 = 0;
+
+let centerX = GetStgFrameWidth()/2;
+let centerY = GetStgFrameHeight()/2;
+
+let imgBoss = CSD~"./img/Cutin.png";
+let imgMirror = CSD~"./img/mirror.png";
+
+@Event{
+    alternative(GetEventType)
+	case(EV_REQUEST_SPELL_SCORE){SetScriptResult(88888888);}
+	case(EV_REQUEST_LIFE){SetScriptResult(5000);}
+	case(EV_REQUEST_TIMER){SetScriptResult(600);}
+}
+ 
+@Initialize{
+	SetAutoDeleteObject(true);
+	Tamamo = ObjEnemy_Create(OBJ_ENEMY_BOSS);	
+    ObjEnemy_Regist(Tamamo);	
+    mirror = ObjEnemy_Create(OBJ_ENEMY);
+    ObjEnemy_Regist(mirror);
+	
+	renderboss;
+	renderMirror(0.1);
+	bossManage;
+	main;  
+}
+
+task renderboss{
+	let TamamoImage = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(TamamoImage,imgBoss);
+	ObjSprite2D_SetDestCenter(TamamoImage);
+	ObjRender_SetScaleXYZ(TamamoImage,0.1,0.1,0);
+	Obj_SetRenderPriority(TamamoImage,0.3);
+	ObjSprite2D_SetSourceRect(TamamoImage,0,0,569,919);
+	//renderMirror;
+	
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjSprite2D_SetDestCenter(TamamoImage);
+		ObjRender_SetPosition(TamamoImage,TamamoX,TamamoY,0);
+		yield;
+	}
+}
+
+task renderMirror(scale){
+	let angle = 0;
+	ObjPrim_SetTexture(mirrorSprite,imgMirror);
+	ObjSprite2D_SetDestCenter(mirrorSprite);
+	ObjRender_SetScaleXYZ(mirrorSprite,scale,scale,0);
+	Obj_SetRenderPriority(mirrorSprite,0.28);
+	ObjSprite2D_SetSourceRect(mirrorSprite,0,0,791,960);
+	//wait(150);
+	
+	while(!Obj_IsDeleted(mirror)){		
+		ObjSprite2D_SetDestCenter(mirrorSprite);
+		ObjRender_SetPosition(mirrorSprite,mirrorX,mirrorY,0);
+		ObjRender_SetAngleZ(mirrorSprite, angle);
+		angle+=5;
+		yield;
+	}
+}
+
+task mirrorPath{
+	let delay = 15;
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjMove_SetDestAtFrame(mirror, TamamoX, TamamoY, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX0, mpY0, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX1, mpY1, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX2, mpY2, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX3, mpY3, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX4, mpY4, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, TamamoX, TamamoY, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX5, mpY5, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX6, mpY6, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX7, mpY7, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX8, mpY8, delay);
+		wait(delay);
+		ObjMove_SetDestAtFrame(mirror, mpX9, mpY9, delay);
+		wait(delay);
+	}
+}
+
+@MainLoop{
+	yield;
+}
+
+task main{	
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);
+	moveDef(Tamamo,5);
+	mirrorPath;
+	ObjEnemy_SetDamageRate(Tamamo,0,0);
+	wait(60);	
+	ObjEnemy_SetDamageRate(Tamamo,120,25);
+	ObjEnemy_SetDamageRate(mirror,0,0);
+	
+	//ObjEnemyBossScene_StartSpell(GetEnemyBossSceneObjectID);
+	//ObjCutin_SetSpellcardS4("Noble Phantasm \"Eightfold Blessing of Amaterasu\"", imgBoss, NAZRIN, 104, 104, 240);
+	//ObjCutin_LaunchS3(KANAKO, imgBoss, "Normal");
+	wait(60);
+	fire;		
+}
+
+task fire{
+	let quarterWidth = GetStgFrameWidth()/4;
+	let delay = 180;
+
+	amulets(Tamamo,1,601);
+	amulets(mirror,-1,100);
+	while(!Obj_IsDeleted(Tamamo)){
+		if(TamamoX > quarterWidth && TamamoX < (GetStgFrameWidth()-quarterWidth)){
+			ObjMove_SetDestAtSpeed(Tamamo, TamamoX+(rand(40,70)*fiftyFifty(-1,1)), TamamoY, 0.5);
+		}
+		else{
+			if(TamamoX < GetCenterX){
+				ObjMove_SetDestAtSpeed(Tamamo, TamamoX+(rand(50,100)), TamamoY, 0.5);
+			}
+			else{
+				ObjMove_SetDestAtSpeed(Tamamo, TamamoX-(rand(50,100)), TamamoY, 0.5);
+			}
+		}
+	wait(delay);
+	}
+}
+
+task amulets(shot,dir,graphic){
+	let nOfB = 8;
+	let angle = 0;
+	let iter = 0;
+	while(!Obj_IsDeleted(shot)){
+		loop(nOfB){
+			amulet(shot,angle,graphic);
+			angle+=360/nOfB;
+		}
+		angle+=iter*dir;
+		//if(iter > 0){
+			iter++;
+		//}
+		wait(5);
+	}
+}
+
+task amulet(shot,angle,graphic){
+	let amulet = CreateShotOA1(shot, 5, angle, graphic, 10);
+	wait(10);
+	ObjMove_SetAcceleration(amulet, -0.1);
+	wait(45);
+	ObjMove_SetAcceleration(amulet, 0.05);
+	ObjMove_SetMaxSpeed(amulet, 3);
+}
+
+
+task bossManage{
+
+	while(ObjEnemy_GetInfo(Tamamo,INFO_LIFE)>0){
+        TamamoX = ObjMove_GetX(Tamamo);
+        TamamoY = ObjMove_GetY(Tamamo);
+
+        mirrorX = ObjMove_GetX(mirror);
+        mirrorY = ObjMove_GetY(mirror);
+
+        //mirror path points
+        mpX0 = TamamoX+magnitude;
+        mpY0 = TamamoY+magnitude;
+        mpX1 = TamamoX+magnitude*2;
+        mpY1 = TamamoY+magnitude;
+        mpX2 = TamamoX+magnitude*3;
+        mpY2 = TamamoY;
+        mpX3 = TamamoX+magnitude*2;
+        mpY3 = TamamoY-magnitude;
+        mpX4 = TamamoX+magnitude;
+        mpY4 = TamamoY-magnitude;
+
+        mpX5 = TamamoX-magnitude;
+        mpY5 = TamamoY+magnitude;
+        mpX6 = TamamoX-magnitude*2;
+        mpY6 = TamamoY+magnitude;
+        mpX7 = TamamoX-magnitude*3;
+        mpY7 = TamamoY;
+        mpX8 = TamamoX-magnitude*2;
+        mpY8 = TamamoY-magnitude;
+        mpX9 = TamamoX-magnitude;
+        mpY9 = TamamoY-magnitude;
+
+        ObjEnemy_SetIntersectionCircleToShot(Tamamo, TamamoX, TamamoY, 60);
+        ObjEnemy_SetIntersectionCircleToPlayer(Tamamo, TamamoX,TamamoY, 40);
+
+        ObjEnemy_SetIntersectionCircleToShot(mirror, mirrorX, mirrorY, 40);
+        ObjEnemy_SetIntersectionCircleToPlayer(mirror, mirrorX,mirrorY, 30);
+		yield;
+	}
+	
+	Obj_Delete(Tamamo);
+	Obj_Delete(mirror);
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+    CloseScript(GetOwnScriptID()); 
+}

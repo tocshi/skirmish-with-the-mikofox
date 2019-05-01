@@ -1,0 +1,57 @@
+#TouhouDanmakufu[Plural]
+#ScriptVersion[3]
+#System["./default_system/Default_System.txt"]
+#Title["Skirmish with the Miko Fox v1.0"]
+#Text[""]
+#Background["./background.txt"]
+
+#include".\Functions.txt"
+
+let music = ObjSound_Create;
+ObjSound_Load(music,CSD ~ "./se/tamamo1.ogg");
+ObjSound_SetLoopEnable(music,true);
+
+@Initialize{
+	TPlural;
+	SetPlayerLife(999);
+	SetPlayerSpell(3);
+	SetForbidPlayerSpell(true);
+	SetPauseScriptPath(CSD ~ "./default_system/Default_Pause.txt");
+	SetEndSceneScriptPath(CSD ~ "./default_system/Default_EndScene.txt");
+}
+
+@Event{
+	
+}
+
+@MainLoop{
+	yield;
+}
+
+task TPlural{
+	wait(20);
+	ObjSound_Play(music);
+	ObjSound_SetVolumeRate(music,70);
+	let obj=ObjEnemyBossScene_Create();
+	
+	//ObjEnemyBossScene_Add(obj,0,CSD~"nonSpell01.txt");
+	ObjEnemyBossScene_Add(obj,0,CSD~"foxMaidensCharm.txt");
+	//ObjEnemyBossScene_Add(obj,1,CSD~"suitenNikkou.txt");
+	//ObjEnemyBossScene_Add(obj,2,CSD~"nonSpell02.txt");
+	//ObjEnemyBossScene_Add(obj,2,CSD~"jusouKonisshou.txt");
+	ObjEnemyBossScene_Add(obj,3,CSD~"nonSpell03.txt");
+	//ObjEnemyBossScene_Add(obj,3,CSD~"foxWedding.txt");
+	//ObjEnemyBossScene_Add(obj,4,CSD~"nonSpell04.txt");
+	//ObjEnemyBossScene_Add(obj,4,CSD~"morph.txt");
+	//ObjEnemyBossScene_Add(obj,5,CSD~"comboPhantasm.txt");
+
+	ObjEnemyBossScene_LoadInThread(obj);
+	ObjEnemyBossScene_Regist(obj);
+	while(!Obj_IsDeleted(obj))
+	{
+		yield;
+	}
+	CloseScript(GetOwnScriptID());
+}
+
+

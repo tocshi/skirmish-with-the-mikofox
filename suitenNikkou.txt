@@ -1,0 +1,324 @@
+#include".\shot\AllStarShot_Const.txt"
+#include".\Functions.txt"
+#include".\selibrary.txt"
+#include".\Cutin.txt"
+
+
+let Tamamo = ID_INVALID;
+let mirror = ID_INVALID;
+let mirrorSprite = ObjPrim_Create(OBJ_SPRITE_2D);
+
+let TamamoX = GetStgFrameWidth()/2;
+let TamamoY = GetStgFrameTop();
+let mirrorX = GetStgFrameWidth()/2;
+let mirrorY = GetStgFrameTop()-100;
+
+let centerX = GetStgFrameWidth()/2;
+let centerY = GetStgFrameHeight()/2;
+
+let imgBoss = CSD~"./img/Cutin.png";
+let imgCutin = CSD~"./img/CutinSmall.png";
+let imgMirror = CSD~"./img/mirror.png";
+
+@Event{
+    alternative(GetEventType)
+	case(EV_REQUEST_SPELL_SCORE){SetScriptResult(88888888);}
+	case(EV_REQUEST_LIFE){SetScriptResult(999999);}
+	case(EV_REQUEST_TIMER){SetScriptResult(30);}
+}
+ 
+@Initialize{
+	SetAutoDeleteObject(true);
+	Tamamo = ObjEnemy_Create(OBJ_ENEMY_BOSS);	
+    ObjEnemy_Regist(Tamamo);	
+    mirror = ObjEnemy_Create(OBJ_ENEMY);
+    ObjEnemy_Regist(mirror);
+	
+	renderboss;
+	bossManage;
+	main;  
+}
+
+task renderboss{
+	let TamamoImage = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(TamamoImage,imgBoss);
+	ObjSprite2D_SetDestCenter(TamamoImage);
+	ObjRender_SetScaleXYZ(TamamoImage,0.1,0.1,0);
+	Obj_SetRenderPriority(TamamoImage,0.3);
+	ObjSprite2D_SetSourceRect(TamamoImage,0,0,569,919);
+	//renderMirror;
+	
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjSprite2D_SetDestCenter(TamamoImage);
+		ObjRender_SetPosition(TamamoImage,TamamoX,TamamoY,0);
+		yield;
+	}
+}
+
+task renderMirror(scale){
+	ObjPrim_SetTexture(mirrorSprite,imgMirror);
+	ObjSprite2D_SetDestCenter(mirrorSprite);
+	ObjRender_SetScaleXYZ(mirrorSprite,scale,scale,0);
+	Obj_SetRenderPriority(mirrorSprite,0.28);
+	ObjSprite2D_SetSourceRect(mirrorSprite,0,0,791,960);
+	//wait(150);
+	//expandSprite(mirror,0.05,0.1,0.1,0.1,30);
+	
+	while(!Obj_IsDeleted(mirror)){		
+		ObjSprite2D_SetDestCenter(mirrorSprite);
+		ObjRender_SetPosition(mirrorSprite,mirrorX,mirrorY,0);
+		yield;
+	}
+}
+
+@MainLoop{
+	yield;
+}
+
+task main{	
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+	ObjEnemy_SetDamageRate(Tamamo,0,0);
+	ObjEnemy_SetDamageRate(mirror,0,0);
+	moveMid(Tamamo,5);
+	ObjEnemyBossScene_StartSpell(GetEnemyBossSceneObjectID);
+	ObjCutin_SetSpellcardS4("Noble Phantasm \"Eightfold Blessing of Amaterasu\"", imgBoss, NAZRIN, 104, 104, 240);
+	ObjCutin_LaunchS3(KANAKO, imgCutin, "Normal");
+	wait(150);
+	fire;		
+}
+
+task fire{
+	omni;
+}
+
+task omni{
+	let nOfB = 8;
+	let angle = 90;
+	let iter = 1;
+	
+	loop(nOfB){
+	startAmulet(angle,iter);
+	angle+=(360/nOfB);
+	iter++;
+	}
+}
+
+task startAmulet(angle,iter){
+	let interval = 30;
+
+	let shot = CreateShotA1(TamamoX, TamamoY, 0, angle, 100, 0);
+	ObjRender_SetScaleX(shot, 1.5);
+	ObjRender_SetScaleY(shot, 2.5);
+	ObjRender_SetBlendType(shot, BLEND_ALPHA);
+	Obj_SetVisible(shot, false);
+	ObjMove_SetAngularVelocity(shot, 6);
+	ObjMove_SetAcceleration(shot, 0.05);
+	ObjMove_SetMaxSpeed(shot, 15);
+	renderAngleManage(shot,90,3600);
+	if(iter == 1 || iter == 5){
+		Obj_SetVisible(shot, true);
+	}
+	wait(interval+30);
+	if(iter == 2 || iter == 6){
+		Obj_SetVisible(shot, true);
+	}
+	wait(interval+20);
+	if(iter == 3 || iter == 7){
+		Obj_SetVisible(shot, true);
+	}
+	wait(interval+10);
+	if(iter == 4 || iter == 8){
+		Obj_SetVisible(shot, true);
+	}
+	flashBlend(shot,BLEND_ADD_RGB,30,5,8);
+	wait(150);
+	ObjMove_SetAcceleration(shot, 0);
+	ObjMove_SetSpeed(shot, 0);
+	ObjMove_SetAngularVelocity(shot, 0);
+	let iter2 = 0;
+	//let cangle = rand(0,360);
+
+	//gate pillars
+	toriiAmulet(25,40,0,shot);
+	toriiAmulet(-25,40,0,shot);
+	toriiAmulet(25,25,0,shot);
+	toriiAmulet(-25,25,0,shot);
+	toriiAmulet(25,10,0,shot);
+	toriiAmulet(-25,10,0,shot);
+	toriiAmulet(25,-5,0,shot);
+	toriiAmulet(-25,-5,0,shot);
+	toriiAmulet(25,-20,0,shot);
+	toriiAmulet(-25,-20,0,shot);
+
+	//gate horizontal
+	toriiAmulet(0,50,90,shot);
+	toriiAmulet(0,40,0,shot);
+	toriiAmulet(15,50,90,shot);
+	toriiAmulet(-15,50,90,shot);
+	toriiAmulet(30,50,80,shot);
+	toriiAmulet(-30,50,100,shot);
+	toriiAmulet(40,55,65,shot);
+	toriiAmulet(-40,55,115,shot);
+
+	toriiAmulet(0,35,90,shot);
+	toriiAmulet(15,35,90,shot);
+	toriiAmulet(-15,35,90,shot);
+	toriiAmulet(30,35,90,shot);
+	toriiAmulet(-30,35,90,shot);
+	
+
+
+	loop(2){
+		
+		cLaser(shot,/*c*/angle,iter2); //why did I do this
+		angle+=5;
+		iter2++;
+	}
+	moveMid(mirror, 10);
+	wait(30);
+
+	renderMirror(0.1);
+	//Obj_SetRenderPriority(ObjShot_GetImageID(mirror), 0.59);
+	ObjMove_SetDestAtFrame(mirror, centerX, 50, 45);
+	wait(180);
+	ObjMove_SetDestAtFrame(Tamamo, centerX, 50, 30);
+	wait(30);
+	//Obj_SetRenderPriority(ObjShot_GetImageID(mirror), 0.29);
+	ObjMove_SetDestAtFrame(mirror, centerX, centerY, 10);
+	wait(30);
+	ObjMove_SetDestAtFrame(Tamamo, centerX, centerY, 30);
+	renderMirror(0);
+	ObjShot_FadeDelete(shot);
+
+	wait(90);
+
+	omni2;
+
+}
+
+function quiccPicc(iter){
+	if(iter==0){return 335;}else{return 334;}
+}
+
+task cLaser(shot,angle,iter){
+	let laser = CreateCurveLaserA1(ObjMove_GetX(shot), 
+									ObjMove_GetY(shot), 
+									rand(2,3), 
+									//angle+fiftyFifty(fiftyFifty(90,-90),fiftyFifty(0,180)), 
+									angle-180,
+									rand(20,20), 
+									rand(50,100), 
+									quiccPicc(iter), 
+									10);
+	ObjRender_SetBlendType(laser, BLEND_ADD_ARGB);
+	Obj_SetRenderPriority(laser, 0.7);
+	ObjShot_SetIntersectionEnable(laser, false);
+	ObjCrLaser_SetTipDecrement(laser, 0);
+	ObjMove_SetAngularVelocity(laser, rand(9,9));
+	ObjMove_SetAcceleration(laser, 0.12);
+	ObjMove_SetMaxSpeed(laser, 100);
+	wait(60);
+	ObjShot_FadeDelete(laser);
+}
+
+function calcAngle(obj){
+	/*if(ObjMove_GetAngle(obj) > 90){
+		return ObjMove_GetAngle(obj)-90;
+	}
+	else{
+		return ObjMove_GetAngle(obj)+(360-90);
+	}*/
+
+	return ObjMove_GetAngle(obj)-90;
+}
+
+task toriiAmulet(x0,y0,angleOff,centerObj){
+
+	let angle = calcAngle(centerObj);
+	let theta = modc(angle,360);
+	let x = cos(theta)*(y0)-sin(theta)*(x0);
+	let y = sin(theta)*(y0)+cos(theta)*(x0);
+	
+	//let xf = quadrantifyX(x,angle);
+	//let yf = quadrantifyY(y,angle);
+
+	let multiplier = 300;
+
+	let shot0 = CreateShotA1(ObjMove_GetX(centerObj)+x,ObjMove_GetY(centerObj)+y,0,angle+angleOff,100,10);
+	let shot1 = CreateShotA1(ObjMove_GetX(centerObj)+x,ObjMove_GetY(centerObj)+y,0,angle+angleOff,101,10);
+	ObjRender_SetBlendType(shot0, BLEND_ADD_RGB);
+	ObjRender_SetBlendType(shot1, BLEND_MULTIPLY);
+	
+	wait(250);
+	let shot2 = CreateShotA1(ObjMove_GetX(centerObj)+x,ObjMove_GetY(centerObj)+y,0,angle+angleOff-180,100,0);
+	let shot3 = CreateShotA1(ObjMove_GetX(centerObj)+x,ObjMove_GetY(centerObj)+y,0,angle+angleOff-180,101,0);
+	ObjRender_SetBlendType(shot2, BLEND_ADD_RGB);
+	ObjRender_SetBlendType(shot3, BLEND_MULTIPLY);
+	ObjMove_SetSpeed(shot0, 1/(Distance(ObjMove_GetX(shot0),ObjMove_GetY(shot0),centerX,centerY))*multiplier);
+	ObjMove_SetSpeed(shot1, 1/(Distance(ObjMove_GetX(shot0),ObjMove_GetY(shot0),centerX,centerY))*multiplier);
+	ObjMove_SetSpeed(shot2, 1/(Distance(ObjMove_GetX(shot0),ObjMove_GetY(shot0),centerX,centerY))*multiplier);
+	ObjMove_SetSpeed(shot3, 1/(Distance(ObjMove_GetX(shot0),ObjMove_GetY(shot0),centerX,centerY))*multiplier);
+}
+
+task omni2{
+	let nOfB = 8;
+	let angle = GetAngleToPlayer(Tamamo);
+	let omega = 0;
+	let iter = 1;
+	
+	loop{
+		loop(nOfB){
+			wind(angle,iter,omega);
+			angle+=(360/nOfB);
+			iter++;
+		}
+		omega+=(0.1);
+		if(iter < 320){wait(30-(iter/16));}
+		else{wait(10)}
+	}
+}
+
+task wind(angle, iter, angvel){
+	//if(modc(iter,2) == 0){
+		let shot = CreateShotOA1(Tamamo, 1, angle, 100, 10);
+
+		//ObjShot_SetIntersectionEnable(shot, false);
+		ObjMove_SetAcceleration(shot, 0.02);
+		ObjMove_SetMaxSpeed(shot, 5);
+		ObjMove_SetAngularVelocity(shot, -angvel);
+
+		wait(90);
+		//ObjShot_FadeDelete(shot);
+	//}
+	/*else{
+		let shot = CreateCurveLaserA1(TamamoX, TamamoY, 1, angle, 30, 15, 1023, 10);
+
+		ObjMove_SetAcceleration(shot, 0.01);
+		ObjMove_SetMaxSpeed(shot, 20);
+		ObjMove_SetAngularVelocity(shot, -angvel);
+	}*/
+
+}
+
+task bossManage{
+
+	while(ObjEnemy_GetInfo(Tamamo,INFO_LIFE)>0){
+        TamamoX = ObjMove_GetX(Tamamo);
+        TamamoY = ObjMove_GetY(Tamamo);
+
+        mirrorX = ObjMove_GetX(mirror);
+        mirrorY = ObjMove_GetY(mirror);
+
+        ObjEnemy_SetIntersectionCircleToShot(Tamamo, TamamoX, TamamoY, 60);
+        ObjEnemy_SetIntersectionCircleToPlayer(Tamamo, TamamoX,TamamoY, 40);
+
+        ObjEnemy_SetIntersectionCircleToShot(mirror, mirrorX, mirrorY, 40);
+        ObjEnemy_SetIntersectionCircleToPlayer(mirror, mirrorX,mirrorY, 30);
+		yield;
+	}
+	
+	Obj_Delete(Tamamo);
+	Obj_Delete(mirror);
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+    CloseScript(GetOwnScriptID()); 
+}

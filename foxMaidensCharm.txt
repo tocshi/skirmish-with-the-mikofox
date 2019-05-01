@@ -1,0 +1,165 @@
+#include".\shot\AllStarShot_Const.txt"
+#include".\Functions.txt"
+#include".\selibrary.txt"
+#include".\Cutin.txt"
+
+
+let Tamamo = ID_INVALID;
+let TamamoX = GetStgFrameWidth()/2;
+let TamamoY = GetStgFrameTop();
+
+let imgBoss = CSD~"./img/Cutin.png";
+let imgCutin = CSD~"./img/CutinSmall.png";
+
+
+@Event{
+    alternative(GetEventType)
+	case(EV_REQUEST_SPELL_SCORE){SetScriptResult(88888888);}
+	case(EV_REQUEST_LIFE){SetScriptResult(900);}
+	case(EV_REQUEST_TIMER){SetScriptResult(60);}
+}
+ 
+@Initialize{
+	SetAutoDeleteObject(true);
+	Tamamo = ObjEnemy_Create(OBJ_ENEMY_BOSS);	
+    ObjEnemy_Regist(Tamamo);	
+	
+	renderboss;
+	bossManage;
+	main;  
+}
+
+task renderboss{
+	let TamamoImage = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(TamamoImage,imgBoss);
+	ObjSprite2D_SetDestCenter(TamamoImage);
+	ObjRender_SetScaleXYZ(TamamoImage,0.1,0.1,0);
+	Obj_SetRenderPriority(TamamoImage,0.3);
+	ObjSprite2D_SetSourceRect(TamamoImage,0,0,569,919);
+	
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjSprite2D_SetDestCenter(TamamoImage);
+		ObjRender_SetPosition(TamamoImage,TamamoX,TamamoY,0);
+		yield;
+	}
+}
+
+@MainLoop{
+	yield;
+}
+
+task main{	
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+	ObjEnemy_SetDamageRate(Tamamo,0,0);
+	ObjEnemyBossScene_StartSpell(Tamamo);
+	moveDef(Tamamo,5);
+	ObjCutin_SetSpellcardS4("Extra Attack \"Fox Maiden's Charm\"", imgBoss, NAZRIN, 104, 104, 240);
+	ObjCutin_LaunchS3(KANAKO, imgCutin, "Normal");
+	wait(60);
+	ObjEnemy_SetDamageRate(Tamamo,20,5);
+	fire;		
+}
+
+task fire{
+	loop{
+		hearts;
+		wait(60);
+		omni;
+		wait(60);
+	}
+}
+
+task hearts{
+	wait(30);
+	pulseGraphic(TamamoX,TamamoY-50,90,736,3,10,60);
+	loop(1){
+		wait(60);
+		heart;
+	}
+}
+/*		Diagram of a Heart
+ O O O O 		each space is ~10 pixels?
+O   O   O 		maybe don't be an idiot like me and implement this with magnitude?
+O   C   O
+  O   O
+    O
+*/
+task heart{
+	let pX = GetPlayerX();
+	let pY = GetPlayerY();
+	reversePulseGraphic(pX,pY,90,736,3,10,60);
+	wait(60);
+	CreateShotA1(pX, 	pY-10,  0.25, atan2(-10,0), 	211, 0);
+	CreateShotA1(pX+5,	pY-20,  0.25, atan2(-20,5), 	211, 0);
+	CreateShotA1(pX+15, pY-20,  0.25, atan2(-20,15), 	211, 0);
+	CreateShotA1(pX+20, pY-10,  0.25, atan2(-10,20), 	211, 0);
+	CreateShotA1(pX+20, pY, 	0.25, atan2(0,20), 		211, 0);
+	CreateShotA1(pX+10, pY+10,  0.25, atan2(10,10), 	211, 0);
+	CreateShotA1(pX, 	pY+20,  0.25, atan2(20,0), 		211, 0);
+	CreateShotA1(pX-10, pY+10,  0.25, atan2(10,-10),	211, 0);
+	CreateShotA1(pX-20, pY, 	0.25, atan2(0,-20), 	211, 0);
+	CreateShotA1(pX-20, pY-10,  0.25, atan2(-10,-20),	211, 0);
+	CreateShotA1(pX-15, pY-20,  0.25, atan2(-20,-15),	211, 0);
+	CreateShotA1(pX-5, 	pY-20,  0.25, atan2(-20,-5), 	211, 0);
+}
+
+task omni{
+	let nOfB = 8;
+	let angle = (GetAngleToPlayer(Tamamo));
+	
+	loop(nOfB){
+	followHearts(angle);
+	angle+=(360/nOfB);
+	}
+}
+
+task followHearts(angle){
+	let chain = 1;
+
+	loop(chain){
+		followHeart(angle);
+
+		wait(20);
+	}
+}
+
+task followHeart(angle){
+	let shot = CreateShotA2(TamamoX,TamamoY,5,angle,-0.1,0.5,238,10);
+	wait(30);
+	loop{
+		let dist1 = Distance(TamamoX,TamamoY,GetPlayerX(),GetPlayerY());
+		wait(5);	
+		let dist2 = Distance(TamamoX,TamamoY,GetPlayerX(),GetPlayerY());
+
+		if(dist1 < dist2){
+			ObjMove_SetMaxSpeed(shot, 5);
+			ObjMove_SetAcceleration(shot, 0.1);
+			ObjMove_SetAngle(shot, angle);
+			ObjShot_SetGraphic(shot, 238);
+		}
+		else{
+			ObjMove_SetMaxSpeed(shot, 0.5);
+			ObjMove_SetAcceleration(shot, 0.1);
+			ObjMove_SetAngle(shot, GetAngleToPlayer(shot));
+			ObjShot_SetGraphic(shot, 236);
+		}
+		wait(5);
+	}
+
+}
+
+task bossManage{
+
+	while(ObjEnemy_GetInfo(Tamamo,INFO_LIFE)>0){
+        TamamoX = ObjMove_GetX(Tamamo);
+        TamamoY = ObjMove_GetY(Tamamo);
+
+        ObjEnemy_SetIntersectionCircleToShot(Tamamo, TamamoX, TamamoY, 60);
+        ObjEnemy_SetIntersectionCircleToPlayer(Tamamo, TamamoX,TamamoY, 40);
+		yield;
+	}
+	
+	Obj_Delete(Tamamo);
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+    CloseScript(GetOwnScriptID()); 
+}

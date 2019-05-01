@@ -1,0 +1,157 @@
+#include".\shot\AllStarShot_Const.txt"
+#include".\Functions.txt"
+#include".\selibrary.txt"
+#include".\Cutin.txt"
+
+
+let Tamamo = ID_INVALID;
+let mirror = ID_INVALID;
+let mirrorSprite = ObjPrim_Create(OBJ_SPRITE_2D);
+
+let TamamoX = GetStgFrameWidth()/2;
+let TamamoY = GetStgFrameTop();
+let mirrorX = GetStgFrameWidth()/2;
+let mirrorY = GetStgFrameTop()-100;
+
+let mPathX = [];
+
+loop(32){
+	mPathX = mPathX~[0];	
+}
+
+let centerX = GetStgFrameWidth()/2;
+let centerY = GetStgFrameHeight()/2;
+
+let imgBoss = CSD~"./img/Cutin.png";
+let imgMirror = CSD~"./img/mirror.png";
+
+@Event{
+    alternative(GetEventType)
+	case(EV_REQUEST_SPELL_SCORE){SetScriptResult(88888888);}
+	case(EV_REQUEST_LIFE){SetScriptResult(5000);}
+	case(EV_REQUEST_TIMER){SetScriptResult(600);}
+}
+ 
+@Initialize{
+	SetAutoDeleteObject(true);
+	Tamamo = ObjEnemy_Create(OBJ_ENEMY_BOSS);	
+    ObjEnemy_Regist(Tamamo);	
+    mirror = ObjEnemy_Create(OBJ_ENEMY);
+    ObjEnemy_Regist(mirror);
+	
+	renderboss;
+	renderMirror(0.1);
+	bossManage;
+	main;  
+}
+
+task renderboss{
+	let TamamoImage = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(TamamoImage,imgBoss);
+	ObjSprite2D_SetDestCenter(TamamoImage);
+	ObjRender_SetScaleXYZ(TamamoImage,0.1,0.1,0);
+	Obj_SetRenderPriority(TamamoImage,0.3);
+	ObjSprite2D_SetSourceRect(TamamoImage,0,0,569,919);
+	//renderMirror;
+	
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjSprite2D_SetDestCenter(TamamoImage);
+		ObjRender_SetPosition(TamamoImage,TamamoX,TamamoY,0);
+		yield;
+	}
+}
+
+task renderMirror(scale){
+	let angle = 0;
+	ObjPrim_SetTexture(mirrorSprite,imgMirror);
+	ObjSprite2D_SetDestCenter(mirrorSprite);
+	ObjRender_SetScaleXYZ(mirrorSprite,scale,scale,0);
+	Obj_SetRenderPriority(mirrorSprite,0.28);
+	ObjSprite2D_SetSourceRect(mirrorSprite,0,0,791,960);
+	//wait(150);
+	
+	while(!Obj_IsDeleted(mirror)){		
+		ObjSprite2D_SetDestCenter(mirrorSprite);
+		ObjRender_SetPosition(mirrorSprite,mirrorX,mirrorY,0);
+		ObjRender_SetAngleZ(mirrorSprite, angle);
+		angle+=5;
+		yield;
+	}
+}
+
+task mirrorPath{
+	let delay = 15;
+	let count = 0;
+	while(!Obj_IsDeleted(Tamamo)){
+	ObjMove_SetDestAtFrame(mirror, mPathX[modc(count,31)], TamamoY, 20);
+	wait(delay);
+	count++;	
+	}
+}
+
+@MainLoop{
+	yield;
+}
+
+task main{	
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);
+	moveDef(Tamamo,5);
+	mirrorPath;
+	ObjEnemy_SetDamageRate(Tamamo,0,0);
+	wait(60);	
+	ObjEnemy_SetDamageRate(Tamamo,100,25);
+	ObjEnemy_SetDamageRate(mirror,0,0);
+	
+	//ObjEnemyBossScene_StartSpell(GetEnemyBossSceneObjectID);
+	//ObjCutin_SetSpellcardS4("Noble Phantasm \"Eightfold Blessing of Amaterasu\"", imgBoss, NAZRIN, 104, 104, 240);
+	//ObjCutin_LaunchS3(KANAKO, imgBoss, "Normal");
+	wait(60);
+	fire;		
+}
+
+task fire{
+	
+}
+
+task bossManage{
+
+	while(ObjEnemy_GetInfo(Tamamo,INFO_LIFE)>0){
+        TamamoX = ObjMove_GetX(Tamamo);
+        TamamoY = ObjMove_GetY(Tamamo);
+
+        mirrorX = ObjMove_GetX(mirror);
+        mirrorY = ObjMove_GetY(mirror);
+
+        let i = 0;
+        let exp = 0;
+        let x0 = 1+2+4+8+16+32+64+128;
+        loop(8){
+        	let x = (TamamoX - x0) + power(2,exp);
+        	mPathX[i] = x;
+        	mPathX[31-i] = x;
+        	i++;
+        	exp++;
+        i = 0;
+        exp = 0
+        }
+        loop(8){
+        	let x = (TamamoX + x0) - power(2,exp);
+        	mPathX[15-i] = x;
+        	mPathX[16+i] = x;
+        	i++;
+        	exp++;
+        }
+
+        ObjEnemy_SetIntersectionCircleToShot(Tamamo, TamamoX, TamamoY, 60);
+        ObjEnemy_SetIntersectionCircleToPlayer(Tamamo, TamamoX,TamamoY, 40);
+
+        ObjEnemy_SetIntersectionCircleToShot(mirror, mirrorX, mirrorY, 40);
+        ObjEnemy_SetIntersectionCircleToPlayer(mirror, mirrorX,mirrorY, 30);
+		yield;
+	}
+	
+	Obj_Delete(Tamamo);
+	Obj_Delete(mirror);
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+    CloseScript(GetOwnScriptID()); 
+}

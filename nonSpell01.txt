@@ -1,0 +1,382 @@
+#include".\shot\AllStarShot_Const.txt"
+#include".\Functions.txt"
+#include".\selibrary.txt"
+#include".\Cutin.txt"
+
+
+let Tamamo = ID_INVALID;
+let TamamoX = GetStgFrameWidth()/2;
+let TamamoY = GetStgFrameTop();
+
+let imgBoss = CSD~"./img/Cutin.png";
+
+@Event{
+    alternative(GetEventType)
+	case(EV_REQUEST_SPELL_SCORE){SetScriptResult(0);}
+	case(EV_REQUEST_LIFE){SetScriptResult(5000);}
+	case(EV_REQUEST_TIMER){SetScriptResult(60);}
+}
+ 
+@Initialize{
+	SetAutoDeleteObject(true);
+	Tamamo = ObjEnemy_Create(OBJ_ENEMY_BOSS);	
+    ObjEnemy_Regist(Tamamo);	
+	
+	renderboss;
+	bossManage;
+	main;  
+}
+
+task renderboss{
+	let TamamoImage = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(TamamoImage,imgBoss);
+	ObjSprite2D_SetDestCenter(TamamoImage);
+	ObjRender_SetScaleXYZ(TamamoImage,0.1,0.1,0);
+	Obj_SetRenderPriority(TamamoImage,0.3);
+	ObjSprite2D_SetSourceRect(TamamoImage,0,0,569,919);
+	
+	while(!Obj_IsDeleted(Tamamo)){		
+		ObjSprite2D_SetDestCenter(TamamoImage);
+		ObjRender_SetPosition(TamamoImage,TamamoX,TamamoY,10);
+		yield;
+	}
+}
+
+@MainLoop{
+	yield;
+}
+
+function pickShot2{
+	let random = randInt(0,3);
+	if(random == 0){
+		return 277;
+	}
+	if(random == 1){
+		return 331;
+	}
+	if(random == 2){
+		return 32;
+	}
+	if(random == 3){
+		return 85;
+	}
+}
+
+task main{	
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+	ObjEnemy_SetDamageRate(Tamamo,0,0);
+	moveDef(Tamamo,5);
+	//ObjCutin_SetSpellcardS4("Mikon?? Is it working?", imgBoss, NAZRIN, 104, 104, 240);
+	//ObjCutin_LaunchS3(KANAKO, imgBoss, "Normal");
+	wait(60);
+	ObjEnemy_SetDamageRate(Tamamo,100,25);
+	fire;		
+}
+
+task fire{
+	loop(2){
+		let nOfB = 2;
+		let angle = 0;
+		let dir = -1;
+
+		loop(nOfB){
+			glow(angle,dir);
+			angle+=360/nOfB;
+			dir*=-1;
+		}
+		wait(300);
+
+		nOfB = 60;
+
+		loop(2){
+			let rate = 12;
+			let currA = 255;
+			let deviation = 0;
+
+			loop(255/rate){
+				ObjRender_SetAlpha(Tamamo, currA-rate);
+				currA-=rate;
+				wait(1);
+			}
+			let randX = rand(GetPlayerX()-deviation,GetPlayerX()+deviation);
+			let randY = rand(GetPlayerY()-deviation,GetPlayerY()+deviation);
+
+			
+			indicator(randX,randY,90);
+			wait(30);
+			wait(60);
+			ObjMove_SetPosition(Tamamo, randX, randY);
+			yield;
+			ObjRender_SetAlpha(Tamamo, 100);
+			yield;
+			ObjRender_SetAlpha(Tamamo, 255);
+
+			loop(nOfB){
+				let random = randInt(0,1);
+				if(random == 0){
+					cLaser(dir);
+				}
+				if(random == 1){
+					cShot(dir);
+				}
+			}
+		wait(60);	
+		dir*=-1;
+		}
+
+		moveMid(Tamamo,5);
+		wait(60);
+		moveDef(Tamamo,5);
+		wait(30);
+
+		nOfB = 2;
+		angle = 0;
+		dir = -1;
+
+		loop(nOfB){
+			glow2(angle,dir);
+			angle+=360/nOfB;
+			dir*=-1;
+		}
+		wait(180);
+
+		let giant = CreateShotA1(TamamoX, TamamoY-100, 0, 0, 825, 30);
+		let follow = CreateShotA1(TamamoX, TamamoY-100, 0, 0, 857, 30);
+		ObjShot_SetSpellResist(giant, true);
+		ObjShot_SetSpellResist(follow, true);
+		ObjRender_SetScaleX(giant, 2);
+		ObjRender_SetScaleY(giant, 2);
+		ObjRender_SetScaleX(follow, 4);
+		ObjRender_SetScaleY(follow, 4);
+
+		ObjRender_SetBlendType(giant, BLEND_SUBTRACT);
+		ObjRender_SetAlpha(giant, 164);
+
+		loop(60){
+			let deviation = 100;
+			let randXOutLeft = rand(GetStgFrameLeft()-deviation,GetStgFrameLeft());
+			let randXOutRight = rand(GetStgFrameWidth(),GetStgFrameWidth()+deviation);
+			let randXIn = rand(GetStgFrameLeft(),GetStgFrameWidth());
+			let randYOutDown = rand(GetStgFrameHeight(),GetStgFrameHeight()+deviation);
+			let randYIn = rand(GetStgFrameTop()+20,GetStgFrameHeight());
+			let randYIn2 = rand(GetStgFrameTop()+20,GetStgFrameHeight());
+
+
+			let shot1 = CreateLooseLaserA1(randXOutLeft, randYIn2, 5, atan2(randYIn2-ObjMove_GetY(giant), randXOutLeft-ObjMove_GetX(giant))+180, 100, 10, 1032, 0);
+			let shot2 = CreateLooseLaserA1(randXIn,  randYOutDown, 5, atan2(randYOutDown-ObjMove_GetY(giant),  randXIn-ObjMove_GetX(giant))+180, 100, 10, 1032, 0);
+			let shot3 = CreateLooseLaserA1(randXOutRight, randYIn, 5, atan2(randYIn-ObjMove_GetY(giant), randXOutRight-ObjMove_GetX(giant))+180, 100, 10, 1032, 0);		
+		
+			wait(5);
+			ObjRender_SetScaleX(giant, ObjRender_GetScaleX(giant)+0.05);
+			ObjRender_SetScaleY(giant, ObjRender_GetScaleY(giant)+0.05);
+			ObjRender_SetScaleX(follow, ObjRender_GetScaleX(follow)+0.05);
+			ObjRender_SetScaleY(follow, ObjRender_GetScaleY(follow)+0.05);
+			hitManage(giant,31*ObjRender_GetScaleX(giant),5);
+		}
+
+		let delay = 180;
+		let iter = 0;
+		let dLaser = CreateStraightLaserA1(ObjMove_GetX(giant), ObjMove_GetY(giant), GetAngleToPlayer(giant), GetStgFrameHeight()*1.5, 100, 0, 105, delay);
+		ObjStLaser_SetSource(dLaser, false);
+		loop(delay-1){ 
+		    if(ObjEnemy_GetInfo(Tamamo, INFO_LIFE) <= 0){
+		        Obj_Delete(dLaser); 
+		        return;
+		    }
+		    if(iter < 120){
+		    	ObjStLaser_SetAngle(dLaser, GetAngleToPlayer(giant));	
+		    }
+		    if((iter > 120) && (modc(iter, 4) == 0)){
+		    	ObjRender_SetAlpha(dLaser, 0);
+		    }
+		    if((iter > 120) && (modc(iter, 4) == 2)){
+		    	ObjRender_SetAlpha(dLaser, 255);
+		    }
+		    yield;
+		    iter++;
+		}
+		angle = ObjStLaser_GetAngle(dLaser);
+		Obj_Delete(dLaser);
+
+		ObjMove_SetAngle(giant, angle);
+		ObjMove_SetAngle(follow, angle);
+		ObjMove_SetMaxSpeed(giant, 5);
+		ObjMove_SetMaxSpeed(follow, 5);
+		ObjMove_SetAcceleration(giant,0.05);
+		ObjMove_SetAcceleration(follow,0.05);
+
+		while(true){
+			yield;
+			hitManage(giant,31*ObjRender_GetScaleX(giant),1);
+			if(ObjMove_GetX(giant) < 0 || 
+				ObjMove_GetX(giant) > GetStgFrameWidth() || 
+				ObjMove_GetY(giant) < 0 || 
+				ObjMove_GetY(giant) > GetStgFrameHeight()){
+				break;
+			}
+		}
+		ObjMove_SetAcceleration(giant, 0);
+		ObjMove_SetAcceleration(follow, 0);
+		ObjMove_SetSpeed(giant, 0);
+		ObjMove_SetSpeed(follow, 0);
+		camShake(125);
+
+		let diag = power(power(GetStgFrameHeight(),2) + power(GetStgFrameWidth(),2), 0.5)-100;
+		iter = 0;
+		loop(250){
+			if(iter<60){
+				hitManage(giant,(diag/60)*iter,1);
+				ObjRender_SetScaleX(giant, ObjRender_GetScaleX(giant)+0.2);
+				ObjRender_SetScaleY(giant, ObjRender_GetScaleY(giant)+0.2);
+				ObjRender_SetScaleX(follow, ObjRender_GetScaleX(follow)+0.2);
+				ObjRender_SetScaleY(follow, ObjRender_GetScaleY(follow)+0.2);
+			}
+			else{
+				hitManage(giant,diag,1);
+			}
+			if((modc(iter,2)==1) && (iter<200)){
+				debris(giant,6,1);
+			}
+		wait(1);
+		iter++;
+		}
+		ObjShot_FadeDelete(giant);
+		ObjShot_FadeDelete(follow);
+		wait(30);
+	}
+}
+
+task glow(angle,dir){
+	let shot = CreateShotA2(TamamoX, TamamoY, 4, angle, -0.05, 0, 858, 30);
+	ObjShot_SetSpellResist(shot, true);
+	ObjRender_SetAlpha(shot, 50);
+	amulets(shot,dir);
+	wait(100);
+	ObjMove_SetAcceleration(shot, 0.1);
+	ObjMove_SetMaxSpeed(shot, 4);
+	ObjMove_SetAngle(shot, angle+90);
+	ObjMove_SetAngularVelocity(shot, 1);
+	wait(60);
+	ObjMove_SetAcceleration(shot, -0.15);
+	ObjMove_SetMaxSpeed(shot, 0);
+	wait(60);
+	Obj_Delete(shot);
+}
+
+task glow2(angle,dir){
+	let shot = CreateShotA2(TamamoX, TamamoY, 2.5, angle, -0.1, 0, 857, 30);
+	ObjShot_SetSpellResist(shot, true);
+	wait(100);
+	ObjMove_SetAcceleration(shot, 0);
+	ObjMove_SetSpeed(shot, 1);
+	ObjMove_SetAngle(shot, angle+90);
+	ObjMove_SetAngularVelocity(shot, 2.5);
+	wait(60);
+	ObjMove_SetAcceleration(shot, -0.05);
+	wait(30);
+	ObjShot_FadeDelete(shot);
+}
+
+task amulets(shot,dir){
+	let nOfB = 8;
+	let angle = 0;
+	let iter = 0;
+	while(!Obj_IsDeleted(shot)){
+		loop(nOfB){
+			amulet(shot,angle);
+			angle+=360/nOfB;
+		}
+		angle+=iter*dir;
+		//if(iter > 0){
+			iter++;
+		//}
+		wait(5);
+	}
+}
+
+task amulet(shot,angle){
+	let amulet = CreateShotOA1(shot, 5, angle, 603, 10);
+	ObjRender_SetBlendType(amulet, BLEND_ALPHA);
+	wait(10);
+	ObjMove_SetAcceleration(amulet, -0.1);
+	wait(45);
+	ObjMove_SetAcceleration(amulet, 0.05);
+	ObjMove_SetMaxSpeed(amulet, 3);
+}
+
+task cLaser(dir){
+	let angle = rand(0,360);
+	let shot = CreateCurveLaserA1(TamamoX, TamamoY, rand(2,3), angle, 30, 15, fiftyFifty(1020,1021), 10);
+	ObjCrLaser_SetTipDecrement(shot, 0);
+	ObjMove_SetAngularVelocity(shot, rand(4,5)*dir);
+	wait(60);
+	ObjMove_SetAngularVelocity(shot, 2*dir);
+	ObjMove_SetAcceleration(shot, 0.1);
+	ObjMove_SetMaxSpeed(shot, rand(6,10));
+	wait(30);
+	ObjMove_SetMaxSpeed(shot, 20);
+}
+
+task cShot(dir){
+	let angle = rand(0,360);
+	let shot = CreateShotOA1(Tamamo, rand(2,4), angle, fiftyFifty(84,85), 10);
+	ObjMove_SetAngularVelocity(shot, rand(4,5)*dir);
+	wait(60);
+	ObjMove_SetAngularVelocity(shot, 2*dir);
+	ObjMove_SetAcceleration(shot, 0.1);
+	ObjMove_SetMaxSpeed(shot, rand(6,10));
+	wait(30);
+	ObjMove_SetMaxSpeed(shot, 20);
+}
+
+task debris(shot, nOfB, nOfL){
+	let delay = 1;
+	loop(nOfL){
+		let angle = rand(0,360);
+		loop(nOfB){
+			debriShot(angle, shot);
+			angle+= rand(360/nOfB-10,360/nOfB+10);
+		}
+		wait(delay);
+	}
+}
+
+task debriShot(angle, shot){
+	let random = rand(20,40);
+	let random2 = rand(2,4);
+	let large = CreateShotOA1(shot, 10, angle, pickShot2, 0);
+	ObjRender_SetAlpha(large, 0);
+	wait(random);
+	ObjRender_SetAlpha(large, 160);
+	ObjMove_SetSpeed(large, random2);
+}
+
+/*
+task sparenDelayLaser(x, y, ang, l, w, dt, graph, delay){ //Sparen's function; he said anyone could use it, so...
+   let objlaser = CreateStraightLaserA1(x, y, ang, l, w, dt, graph, delay);
+   ObjStLaser_SetSource(objlaser, false);
+   loop(delay-1){//So that the graphic never enlarges. 
+       if(ObjEnemy_GetInfo(objBoss, INFO_LIFE) <= 0){
+           Obj_Delete(objlaser); 
+           return;
+       }
+       yield;
+   }
+   Obj_Delete(objlaser);
+}//Thank you so much Sparen for providing this because I'm definitely too lazy to write one myself.
+*/
+task bossManage{
+
+	while(ObjEnemy_GetInfo(Tamamo,INFO_LIFE)>0){
+        TamamoX = ObjMove_GetX(Tamamo);
+        TamamoY = ObjMove_GetY(Tamamo);
+
+        ObjEnemy_SetIntersectionCircleToShot(Tamamo, TamamoX, TamamoY, 60);
+        ObjEnemy_SetIntersectionCircleToPlayer(Tamamo, TamamoX,TamamoY, 40);
+		yield;
+	}
+	
+	Obj_Delete(Tamamo);
+	DeleteShotAll(TYPE_ALL, TYPE_ITEM);	
+    CloseScript(GetOwnScriptID()); 
+}

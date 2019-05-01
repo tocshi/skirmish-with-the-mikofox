@@ -1,0 +1,113 @@
+//AJS's background function from his "Praise the Sun" script, temporary solution because I'm lazy
+
+let CSD = GetCurrentScriptDirectory;
+let objScene = GetEnemyBossSceneObjectID;
+
+let OnSpell = false;
+
+@Initialize{
+	SetCameraFocusX(0);
+	SetCameraFocusY(0);
+	SetCameraFocusZ(0);
+	SetCameraRadius(800);
+    SetCameraElevationAngle(-30);
+	SetCameraAzimuthAngle(90);
+
+	bgcontrol;
+	SpellBG;
+}
+ 
+
+
+
+@MainLoop{
+     
+
+OnSpell = (GetEnemyBossSceneObjectID != ID_INVALID && ObjEnemyBossScene_GetInfo(GetEnemyBossSceneObjectID, INFO_IS_SPELL)); 
+
+	yield;
+	}
+
+
+task bgcontrol{
+Background;
+
+}
+
+function SpriteCreate{
+let obj = ObjPrim_Create(OBJ_SPRITE_3D);
+ObjPrim_SetTexture(obj,CSD~"./img/stgbg.png");
+Obj_SetRenderPriorityI(obj,20);
+ObjRender_SetAngleX(obj,-40);
+ObjSprite3D_SetSourceDestRect(obj,0,0,128,128);
+ObjRender_SetScaleXYZ(obj,1.5,1.5,1.5);
+ObjRender_SetBlendType(obj,BLEND_ALPHA);
+return obj
+}
+
+task Background{
+
+let obj = [SpriteCreate];
+ObjRender_SetAlpha(obj[0],125);
+    let alpha = 0;
+	let frameInvisible = 0;
+	let movel = 0;
+	let movel2 = 0;
+	loop
+	{
+
+    movel+=0;
+    movel2+=1.5;
+    ObjSprite3D_SetSourceDestRect(obj[0],0,0,(256*2.9)+movel,(256*6)+movel2);
+
+    if(alpha > 255){
+   		alpha = 255;
+   	}
+   	if(alpha < 0){
+   		alpha = 0;
+   	}
+            
+		yield;
+	}
+}
+
+task SpellBG {
+	let obj1 = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjRender_SetBlendType(obj1, BLEND_ALPHA);
+	Obj_SetRenderPriorityI(obj1, 23);
+	ObjPrim_SetTexture(obj1, GetCurrentScriptDirectory~"./img/splbg1.png");
+	ObjRender_SetScaleXYZ(obj1, 1.5, 1.5, 1.5);
+	ObjSprite2D_SetSourceRect(obj1, 0, 0, 1000, 1000);
+	ObjSprite2D_SetDestRect(obj1, -256, -256, 256, 256);
+	ObjRender_SetPosition(obj1, GetStgFrameWidth/2, GetStgFrameHeight/2, 0);
+
+	let frame = 0;
+	let ang = 0;
+	let ang2 = 0;
+	let slide = 0;
+	let ang3 = rand(0,360);
+	let x = 0;
+	let y = 0;
+	let alpha = 0;
+	let alpha2 = 0;
+	loop {
+		frame++;
+		
+		if(OnSpell) {
+			if(alpha < 255) { alpha += 2.5; alpha2 += 1; }
+		} else {if(alpha>0){alpha -= 4; alpha2 -= 2;}}
+		
+		ObjRender_SetAlpha(obj1, alpha);
+		
+		slide+=0.5;
+		ObjSprite2D_SetSourceRect(obj1,0,0,512+slide,20000+slide);
+		ObjSprite2D_SetDestCenter(obj1);
+		ObjRender_SetPosition(obj1,GetStgFrameWidth/2-(slide*0.5),GetStgFrameHeight/2+(slide*1.5),0);
+		yield;
+	}
+}
+
+
+
+
+function wait(w) { loop(w) { yield; } } 

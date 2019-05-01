@@ -1,0 +1,18 @@
+let objScene = GetEnemyBossSceneObjectID;
+#include".\Functions.txt"
+
+@Initialize{
+	Background;
+}
+
+@MainLoop{yield;}
+
+task Background{
+	let obj = ObjPrim_Create(OBJ_SPRITE_2D);
+	
+	ObjPrim_SetTexture(obj, CSD~"./img/splbg3_1.png");
+	ObjSprite2D_SetSourceRect(obj, 0, 0, 400, 467);
+	Obj_SetRenderPriorityI(obj,23);
+	ObjSprite2D_SetDestCenter(obj);
+	ObjRender_SetPosition(obj,GetCenterX,GetCenterY,0);
+}

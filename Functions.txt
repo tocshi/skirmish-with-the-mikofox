@@ -1,0 +1,264 @@
+//tocshi's Master Function/Constant Library
+
+//Authentic Homemade Functions and Constants
+/*																					awoo
+⣿⣿⣿⣿⣿⣿⡷⣯⢿⣿⣷⣻⢯⣿⡽⣻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠸⣿⣿⣆⠹⣿⣿⢾⣟⣯⣿⣿⣿⣿⣿⣿⣽⣻⣿⣿⣿⣿⣿⣿⣿⣿⣷⡌
+⣿⣿⣿⣿⣿⣿⣻⣽⡿⣿⣎⠙⣿⣞⣷⡌⢻⣟⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣿⣿⡄⠹⣿⣿⡆⠻⣿⣟⣯⡿⣽⡿⣿⣿⣿⣿⣽⡷⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣟⣷⣿⣿⣿⡀⠹⣟⣾⣟⣆⠹⣯⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⢠⡘⣿⣿⡄⠉⢿⣿⣽⡷⣿⣻⣿⣿⣿⣿⡝⣷⣯⢿⣿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣯⢿⣾⢿⣿⡄⢄⠘⢿⣞⡿⣧⡈⢷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⢸⣧⠘⣿⣷⠈⣦⠙⢿⣽⣷⣻⣽⣿⣿⣿⣿⣌⢿⣯⢿⣿⣿⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣟⣯⣿⢿⣿⡆⢸⡷⡈⢻⡽⣷⡷⡄⠻⣽⣿⣿⡿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⣏⢰⣯⢷⠈⣿⡆⢹⢷⡌⠻⡾⢋⣱⣯⣿⣿⣿⣿⡆⢻⡿⣿⣿⣿⣿⡟⣿
+⣿⣿⣿⣿⣿⣿⡎⣿⢾⡿⣿⡆⢸⣽⢻⣄⠹⣷⣟⣿⣄⠹⣟⣿⣿⣟⣿⣿⣿⣿⣿⣿⣽⣿⣿⣿⡇⢸⣯⣟⣧⠘⣷⠈⡯⠛⢀⡐⢾⣟⣷⣻⣿⣿⣿⡿⡌⢿⣻⣿⣿⣿⣿⡌
+⣿⣿⣿⣿⣿⣿⣧⢸⡿⣟⣿⡇⢸⣯⣟⣮⢧⡈⢿⣞⡿⣦⠘⠏⣹⣿⣽⢿⣿⣿⣿⣿⣯⣿⣿⣿⡇⢸⣿⣿⣾⡆⠹⢀⣠⣾⣟⣷⡈⢿⣞⣯⢿⣿⣿⣿⢷⠘⣯⣿⣿⣿⣿⣷
+⣿⣿⣿⣿⣿⣿⣿⡈⣿⢿⣽⡇⠘⠛⠛⠛⠓⠓⠈⠛⠛⠟⠇⢀⢿⣻⣿⣯⢿⣿⣿⣿⣷⢿⣿⣿⠁⣾⣿⣿⣿⣧⡄⠇⣹⣿⣾⣯⣿⡄⠻⣽⣯⢿⣻⣿⣿⡇⢹⣾⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⡇⢹⣿⡽⡇⢸⣿⣿⣿⣿⣿⣞⣆⠰⣶⣶⡄⢀⢻⡿⣯⣿⡽⣿⣿⣿⢯⣟⡿⢀⣿⣿⣿⣿⣿⣧⠐⣸⣿⣿⣷⣿⣿⣆⠹⣯⣿⣻⣿⣿⣿⢀⣿⢿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⠘⣯⡿⡇⢸⣿⣿⣿⣿⣿⣿⣿⣧⡈⢿⣳⠘⡄⠻⣿⢾⣽⣟⡿⣿⢯⣿⡇⢸⣿⣿⣿⣿⣿⣿⡀⢾⣿⣿⣿⣿⣿⣿⣆⠹⣾⣷⣻⣿⡿⡇⢸⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⡇⢹⣿⠇⢸⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠻⡇⢹⣆⠹⣟⣾⣽⣻⣟⣿⣽⠁⣾⣿⣿⣿⣿⣿⣿⣇⣿⣿⠿⠛⠛⠉⠙⠋⢀⠁⢘⣯⣿⣿⣧⠘⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⣿⡈⣿⡃⢼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⡙⠌⣿⣆⠘⣿⣞⡿⣞⡿⡞⢠⣿⣿⣿⣿⣿⡿⠛⠉⠁⢀⣀⣠⣤⣤⣶⣶⣶⡆⢻⣽⣞⡿⣷⠈⣿⣻⣿⣿
+⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠘⠁⠉⠉⠉⠉⠉⠉⠉⠉⠉⠙⠛⠛⢿⣄⢻⣿⣧⠘⢯⣟⡿⣽⠁⣾⣿⣿⣿⣿⣿⡃⢀⢀⠘⠛⠿⢿⣻⣟⣯⣽⣻⣵⡀⢿⣯⣟⣿⢀⣿⣽⣿⣿
+⣿⣿⣿⣟⣿⣿⣿⣿⣶⣶⡆⢀⣿⣾⣿⣾⣷⣿⣶⠿⠚⠉⢀⢀⣤⣿⣷⣿⣿⣷⡈⢿⣻⢃⣼⣿⣿⣿⣿⣻⣿⣿⣿⡶⣦⣤⣄⣀⡀⠉⠛⠛⠷⣯⣳⠈⣾⡽⣾⢀⣿⢾⣿⣿
+⣿⢿⣿⣿⣻⣿⣿⣿⣿⣿⡿⠐⣿⣿⣿⣿⠿⠋⠁⢀⢀⣤⣾⣿⣿⣿⣿⣿⣿⣿⣿⣌⣥⣾⡿⣿⣿⣷⣿⣿⢿⣷⣿⣿⣟⣾⣽⣳⢯⣟⣶⣦⣤⡾⣟⣦⠘⣿⢾⡁⢺⣿⣿⣿
+⣿⣻⣿⣿⡷⣿⣿⣿⣿⣿⡗⣦⠸⡿⠋⠁⢀⢀⣠⣴⢿⣿⣽⣻⢽⣾⣟⣷⣿⣟⣿⣿⣿⣳⠿⣵⣧⣼⣿⣿⣿⣿⣿⣾⣿⣿⣿⣿⣿⣽⣳⣯⣿⣿⣿⣽⢀⢷⣻⠄⠘⣯⣿⣿
+⣿⢷⣻⣿⣿⣷⣻⣿⣿⣿⡷⠛⣁⢀⣀⣤⣶⣿⣛⡿⣿⣮⣽⡻⣿⣮⣽⣻⢯⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⢀⢸⣿⢀⡆⣿⣿⣿
+⠸⣟⣯⣿⣿⣷⢿⣽⣿⣿⣷⣿⣷⣆⠹⣿⣶⣯⠿⣿⣶⣟⣻⢿⣷⣽⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢀⣯⣟⢀⡇⢼⣿⣿
+⣇⠹⣟⣾⣻⣿⣿⢾⡽⣿⣿⣿⣿⣿⣆⢹⣶⣿⣻⣷⣯⣟⣿⣿⣽⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢀⡿⡇⢸⡇⢸⣿⡇
+⣿⣆⠹⣷⡻⣽⣿⣯⢿⣽⣻⣿⣿⣿⣿⣆⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⢸⣿⠇⣼⡇⢸⡿⢠
+⡙⠾⣆⠹⣿⣦⠛⣿⢯⣷⢿⡽⣿⣿⣿⣿⣆⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃⠎⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⢀⣿⣾⣣⡿⡇⢸⢃⣾
+⣿⣷⡌⢦⠙⣿⣿⣌⠻⣽⢯⣿⣽⣻⣿⣿⣿⣧⠩⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⢰⢣⠘⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⢀⢀⢿⣞⣷⢿⡇⠉⣼⣿
+⣿⣽⣆⠹⣧⠘⣿⣿⡷⣌⠙⢷⣯⡷⣟⣿⣿⣿⣷⡀⡹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣈⠃⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢀⣴⡧⢀⠸⣿⡽⣿⢀⣾⣿⣿
+⢻⣽⣿⡄⢻⣷⡈⢿⣿⣿⢧⢀⠙⢿⣻⡾⣽⣻⣿⣿⣄⠌⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠛⢁⣰⣾⣟⡿⢀⡄⢿⣟⣿⢀⣿⣿⣿
+⡄⢿⣿⣷⢀⠹⣟⣆⠻⣿⣿⣆⢀⣀⠉⠻⣿⡽⣯⣿⣿⣷⣈⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⢀⣠⠘⣯⣷⣿⡟⢀⢆⠸⣿⡟⢸⣿⣿⣿
+⣷⡈⢿⣿⣇⢱⡘⢿⣷⣬⣙⠿⣧⠘⣆⢀⠈⠻⣷⣟⣾⢿⣿⣆⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠋⣠⡞⢡⣿⢀⣿⣿⣿⠇⡄⢸⡄⢻⡇⣼⣿⣿⣿
+⣿⣷⡈⢿⣿⡆⢣⡀⠙⢾⣟⣿⣿⣷⡈⠂⠘⣦⡈⠿⣯⣿⢾⣿⣆⠙⠻⠿⠿⠿⠿⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⢋⣠⣾⡟⢠⣿⣿⢀⣿⣿⡟⢠⣿⢈⣧⠘⢠⣿⣿⣿⣿
+⣿⣿⣿⣄⠻⣿⡄⢳⡄⢆⡙⠾⣽⣿⣿⣆⡀⢹⡷⣄⠙⢿⣿⡾⣿⣆⢀⡀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⢀⣀⣠⣴⡿⣯⠏⣠⣿⣿⡏⢸⣿⡿⢁⣿⣿⢀⣿⠆⢸⣿⣿⣿⣿
+⣿⣿⣿⣿⣦⡙⣿⣆⢻⡌⢿⣶⢤⣉⣙⣿⣷⡀⠙⠽⠷⠄⠹⣿⣟⣿⣆⢙⣋⣤⣤⣤⣄⣀⢀⢀⢀⢀⣾⣿⣟⡷⣯⡿⢃⣼⣿⣿⣿⠇⣼⡟⣡⣿⣿⣿⢀⡿⢠⠈⣿⣿⣿⣿
+⣿⣿⣿⣿⣿⣷⣮⣿⣿⣿⡌⠁⢤⣤⣤⣤⣬⣭⣴⣶⣶⣶⣆⠈⢻⣿⣿⣆⢻⣿⣿⣿⣿⣿⣿⣷⣶⣤⣌⣉⡘⠛⠻⠶⣿⣿⣿⣿⡟⣰⣫⣴⣿⣿⣿⣿⠄⣷⣿⠆⢻⣿⣿⣿
+
+lowkey might be regretting not commenting on what my functions do but whatever nobody's gonna read this anyway right...?
+*/
+
+function randInt(x,y){
+	return round(rand(x,y));
+}
+
+function pythagoras(x,y){
+	return Distance(x,0,0,y);
+}
+
+function quadrantifyX(x,angle){
+	angle = modc(angle,360);
+	if((angle>=0)&&(angle<=90)||(angle>=270)&&(angle<360)){
+		return x;
+	}
+	else{
+		return x*-1;
+	}
+}
+
+function quadrantifyY(y,angle){
+	angle = modc(angle,360);
+	if((angle>=180)&&(angle<360)){
+		return y;
+	}
+	else{
+		return y*-1;
+	}
+}
+
+//might rewrite this to be more general; with a single array argument as opposed to...whatever this is
+function fiftyFifty(outcomeA,outcomeB){
+	let random = randInt(0,1);
+	if(random == 0){
+		return outcomeA;
+	}
+	if(random == 1){
+		return outcomeB;
+	}
+}
+
+task hitManage(shot, hitboxSize, looptimes){
+	loop(looptimes){
+		ObjShot_SetIntersectionCircleA1(shot, hitboxSize);
+		yield;
+	}
+}
+
+task renderAngleManage(obj, angle, looptimes){
+	loop(looptimes){
+		if(!Obj_IsDeleted(obj)){
+			//ObjRender_SetAngleX(obj, angle);
+			//ObjRender_SetAngleY(obj, angle);
+			ObjRender_SetAngleZ(obj, angle);
+		}
+		yield;
+	}
+}
+
+task flashBlend(obj,blendeffect,f0,f,nOfL){
+	let deftype = ObjRender_GetBlendType(obj);
+	let iter = 0;
+	loop(nOfL){
+		ObjRender_SetBlendType(obj, blendeffect);
+		wait((f0+iter*((f-f0)/nOfL))/2);
+		ObjRender_SetBlendType(obj, deftype);
+		wait((f0+iter*((f-f0)/nOfL))/2);
+		iter++;
+	}
+}
+
+task camShake(dur){
+	loop(dur){
+		let deviation = 10;
+		let randX = rand(GetStgFrameWidth()/2-deviation, GetStgFrameWidth()/2+deviation);
+		let randY = rand(GetStgFrameHeight()/2-deviation, GetStgFrameHeight()/2+deviation);
+		Set2DCameraFocusX(randX);
+		Set2DCameraFocusY(randY);
+		wait(2);
+	}
+	Reset2DCamera();
+}
+
+task indicator(x,y,duration){
+	let angle = 0;
+	let iter = 0;
+	let indicatorSprite = ObjPrim_Create(OBJ_SPRITE_2D);
+	ObjPrim_SetTexture(indicatorSprite,CSD~"img/Reimu.png");
+	ObjRender_SetBlendType(indicatorSprite,BLEND_ALPHA);
+	ObjSprite2D_SetSourceRect(indicatorSprite,192,192,255,255);
+	ObjSprite2D_SetDestRect(indicatorSprite,-32,-32,32,32);
+
+	loop(duration){
+		if(modc(iter, 4) == 0){
+			ObjRender_SetAlpha(indicatorSprite, 100);
+		}
+		if(modc(iter, 4) == 2){
+			ObjRender_SetAlpha(indicatorSprite, 255);
+		}
+
+		ObjRender_SetPosition(indicatorSprite,x,y,0);
+		ObjRender_SetAngleZ(indicatorSprite,angle);
+		ObjRender_SetScaleXYZ(indicatorSprite,2,2,1);
+		angle += 5;
+		iter++;
+		yield;
+	}
+	Obj_Delete(indicatorSprite);
+}
+
+task pulseGraphic(x,y,angle,graphic,nOfB,scale,duration){
+	loop(nOfB){
+		pulseShot(x,y,angle,graphic,scale,duration);
+		wait(duration/nOfB);
+	}
+}
+
+task pulseShot(x,y,angle,graphic,scale,duration){
+	let iter = 0;
+	let shot = CreateShotA1(x, y, 0, angle, graphic, 0);
+	ObjRender_SetAlpha(shot, 255);
+	ObjRender_SetScaleX(shot, 1);
+	ObjRender_SetScaleY(shot, 1);
+	loop(duration){
+		iter++;
+		ObjRender_SetAlpha(shot, 255-(iter*(255/duration)));
+		ObjRender_SetScaleX(shot, iter*(scale/duration));
+		ObjRender_SetScaleY(shot, iter*(scale/duration));
+		yield;
+	}
+	ObjShot_FadeDelete(shot);
+}
+
+task reversePulseGraphic(x,y,angle,graphic,nOfB,scale,duration){
+	loop(nOfB){
+		reversePulseShot(x,y,angle,graphic,scale,duration);
+		wait(duration/nOfB);
+	}
+}
+
+task reversePulseShot(x,y,angle,graphic,scale,duration){
+	let iter = 0;
+	let shot = CreateShotA1(x, y, 0, angle, graphic, 0);
+	ObjShot_SetIntersectionEnable(shot, false);
+	ObjRender_SetAlpha(shot, 0);
+	ObjRender_SetScaleX(shot, scale);
+	ObjRender_SetScaleY(shot, scale);
+	loop(duration){
+		iter++;
+		ObjRender_SetAlpha(shot, iter*(255/duration));
+		ObjRender_SetScaleX(shot, scale-iter*(scale/duration));
+		ObjRender_SetScaleY(shot, scale-iter*(scale/duration));
+		yield;
+	}
+	Obj_Delete(shot);
+}
+
+task expandSprite(obj,scaleX0,scaleX,scaleY0,scaleY,duration){
+	ObjRender_SetScaleX(obj, scaleX0);
+	ObjRender_SetScaleY(obj, scaleY0);
+	let iter = 1;
+	loop(duration){
+		ObjRender_SetScaleX(obj, iter*scaleX/duration);
+		ObjRender_SetScaleY(obj, iter*scaleY/duration);
+		iter++;
+		yield;
+	}
+}
+
+task moveDef(obj,speed){
+	ObjMove_SetDestAtSpeed(obj,GetCenterX,GetCenterY-120,speed);
+}
+
+task moveMid(obj,speed){
+	ObjMove_SetDestAtSpeed(obj,GetCenterX,GetCenterY,speed);
+}
+
+//AJS's Function/Constant Library
+
+let CSD = GetCurrentScriptDirectory;
+
+let MinX=32;
+let MaxX=380;
+let MinY=0;
+let MaxY=464;
+let GetCenterX = GetStgFrameWidth/2;
+let GetCenterY = GetStgFrameHeight/2;
+
+function wait(n){ 
+	loop(n){ 
+		yield; 
+	} 
+} 
+
+function Distance(x1, y1, x2, y2){
+	return ((x1-x2)^2 + (y1-y2)^2)^0.5;
+}
+
+function SetScore(let v){ 
+	if(GetEventType == EV_REQUEST_SPELL_SCORE){ 
+		SetScriptResult(v); 
+	} 
+}
+
+function SetLife(let v){ 
+	if(GetEventType == EV_REQUEST_LIFE){ 
+		SetScriptResult(v); 
+	} 
+}
+
+function SetTimer(let v){ 
+	if(GetEventType == EV_REQUEST_TIMER){ 
+		SetScriptResult(v); 
+	} 
+}
+
+function GetAngleTo(let object1, let object2){ 
+	return atan2(ObjMove_GetY(object2)-ObjMove_GetY(object1), ObjMove_GetX(object2)-ObjMove_GetX(object1));
+}
+
+task SE_Play(let path, let vl, duration){
+	let seobj = ObjSound_Create;
+	ObjSound_Load(seobj,path);
+	ObjSound_Play(seobj);
+	ObjSound_SetVolumeRate(seobj,vl);
+	wait(duration);
+	RemoveSound(path);
+}
