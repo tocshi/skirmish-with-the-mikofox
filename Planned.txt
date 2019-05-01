@@ -18,7 +18,7 @@ Known Bugs:
 
 Major, game-breaking bugs:
 -Lag spike when rendering mirror for the first time in "Eightfold Blessings of Amaterasu".
--Redesign the last part of "Eightfold Blessings of Amaterasu".
+-Redesign the last part of "Eightfold Blessings of Amaterasu". (Not an actual bug but very urgent)
 
 Minor, nitpicky bugs:
 -Initial amulets in "Eightfold Blessings of Amaterasu" have a weird angle before adjusting properly.
